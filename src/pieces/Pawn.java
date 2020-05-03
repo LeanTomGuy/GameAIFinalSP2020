@@ -5,6 +5,7 @@ import game.*;
 import java.util.*;
 public class Pawn extends Piece {
 
+	// constructor
 	public Pawn(PlayerType play)
 	{
 		super(play);
