@@ -1,6 +1,7 @@
 package game;
 
 import pieces.Piece;
+import player.PlayerType;
 
 /**
  * 
@@ -18,26 +19,16 @@ public class Move {
 
 	private Piece piece;
 
-	/**
-	 * 
-	 * This is the piece that was captured.
-	 * 
-	 */
-
 	private Piece capturedPiece;
 
 	private Boolean capture;
 
 	public Move(Position initPosition, Position finalPosition, Piece piece,  Piece captured) {
-
 		this.initPosition = initPosition;
-
 		this.finalPosition = finalPosition;
-
 		this.piece = piece;
-
 		this.capturedPiece = captured;
-
+		this.capture = !(captured.getPlayer() == PlayerType.NONE);
 	}
 
 	public Position getInitPosition() {
@@ -69,14 +60,6 @@ public class Move {
 		return capturedPiece;
 
 	}
-
-	/**
-	 * 
-	 * Returns the Position of the capture.
-	 * 
-	 * @return The Position where the capture occured.
-	 * 
-	 */
 
 	public Position getCapturePosition() {
 

@@ -1,5 +1,6 @@
 package pieces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import game.Move;
@@ -38,18 +39,56 @@ public class Rook extends Piece {
 
 	@Override
 	public List<Move> getValidMoves(Squares[][] squares) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<Move> moveLst = new ArrayList<Move>();
+		int thisRank = this.getPosition().getRank();
+		int thisFile = this.getPosition().getFile();
+		for(int i = thisRank+1; i < 8; i++) {
+			Position tempPos = new Position(i,thisFile);
+			if(isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, 
+						this, squares[tempPos.getRank()][thisFile].getPiece());
+				moveLst.add(move);
+			}	
+		}
+		for(int i = thisRank-1; i >= 0; i--) {
+			Position tempPos = new Position(i,thisFile);
+			if(isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, 
+						this, squares[tempPos.getRank()][thisFile].getPiece());
+				moveLst.add(move);
+			}
+		}
+		
+		for(int i = thisFile+1; i < 8; i++) {
+			Position tempPos = new Position(thisRank,i);
+			if(isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, 
+						this, squares[thisRank][tempPos.getFile()].getPiece());
+				moveLst.add(move);
+			}
+		}
+		
+		for(int i = thisFile-1; i >= 0; i--) {
+			Position tempPos = new Position(thisRank,i);
+			if(isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, 
+						this, squares[thisRank][tempPos.getFile()].getPiece());
+				moveLst.add(move);
+			}
+		}
+		
+		return moveLst;
 	}
 
 
 	@Override
 	public Boolean isValidMove(Position destination, Squares[][] squares) {
-		int thisRank = this.getPosition().getRank();
-		int thisFile = this.getPosition().getFile();
-		int destRank = destination.getRank();
-		int destFile = destination.getFile();
 		if(destination.isValidPos() && !this.getPosition().equals(destination)) {
+			int thisRank = this.getPosition().getRank();
+			int thisFile = this.getPosition().getFile();
+			int destRank = destination.getRank();
+			int destFile = destination.getFile();
 			if(thisRank - destRank == 0 || thisFile - destFile == 0) {
 				if(thisRank - destRank != 0) {
 					if(thisRank > destRank) {

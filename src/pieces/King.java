@@ -1,5 +1,6 @@
 package pieces;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import game.Move;
@@ -9,6 +10,8 @@ import player.PlayerType;
 
 public class King extends Piece {
 
+	public Boolean hasMoved = false;
+	
 	public King(PlayerType play, Position pos)
 	{
 		
@@ -36,19 +39,18 @@ public class King extends Piece {
 
 	@Override
 	public List<Move> getValidMoves(Squares[][] squares) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Move> moveLst = new ArrayList<Move>();
+		
+		return moveLst;
 	}
 
 	@Override
 	public Boolean isValidMove(Position end, Squares[][] squares) {
-		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
 	public Position[] getPath(Position end) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

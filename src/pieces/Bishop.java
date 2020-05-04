@@ -1,10 +1,12 @@
 package pieces;
 
-import player.PlayerType;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import game.*;
+import game.Move;
+import game.Position;
+import game.Squares;
+import player.PlayerType;
 
 public class Bishop extends Piece {
 
@@ -35,14 +37,54 @@ public class Bishop extends Piece {
 
 	@Override
 	public List<Move> getValidMoves(Squares[][] squares) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Move> moveLst = new ArrayList<Move>();
+		
+		return moveLst;
 	}
 
 	@Override
 	public Boolean isValidMove(Position end, Squares[][] squares) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!this.getPosition().equals(end) && end.isValidPos()) {
+			int thisRank = this.getPosition().getRank();
+			int thisFile = this.getPosition().getFile();
+			int endRank = end.getRank();
+			int endFile = end.getFile();
+			int rankDiff = Math.abs(thisRank-endRank);
+			int fileDiff = Math.abs(thisFile-endFile);
+			if(rankDiff == fileDiff) {
+				if(thisRank > endRank) {
+					if(thisFile > endFile) {
+						for(int i = 1; i < rankDiff; i++) {
+							if(!(squares[thisRank-i][thisFile-i].isEmpty())) {
+								return false;
+								}
+						}
+					} else {
+						for(int i = 1; i < rankDiff; i++) {
+							if(!(squares[thisRank-i][thisFile+i].isEmpty())) {
+								return false;
+							}
+						}
+					}
+				} else {
+					if(thisFile > endFile) {
+						for(int i = 1; i < rankDiff; i++) {
+							if(!(squares[thisRank+i][thisFile-i].isEmpty())) {
+								return false;
+								}
+						}
+					} else {
+						for(int i = 1; i < rankDiff; i++) {
+							if(!(squares[thisRank+i][thisFile+i].isEmpty())) {
+								return false;
+							}
+						}
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
