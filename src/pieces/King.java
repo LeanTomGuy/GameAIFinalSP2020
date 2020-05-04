@@ -1,13 +1,18 @@
 package pieces;
 
+import java.util.List;
+
+import game.Move;
+import game.Position;
+import game.Squares;
 import player.PlayerType;
 
 public class King extends Piece {
 
-	public King(PlayerType play)
+	public King(PlayerType play, Position pos)
 	{
 		
-			super(play);
+			super(play, pos);
 	}
 	
 	public String toString() 
@@ -27,5 +32,23 @@ public class King extends Piece {
 		}
 		
 		return " "+ret+"K ";
+	}
+
+	@Override
+	public List<Move> getValidMoves(Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean isValidMove(Position end, Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Position[] getPath(Position end) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

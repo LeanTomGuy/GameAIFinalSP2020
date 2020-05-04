@@ -24,21 +24,11 @@ public class Move {
 	 * 
 	 */
 
-	private Piece capturedPiece = null;
+	private Piece capturedPiece;
 
-	private Boolean capture = false;
+	private Boolean capture;
 
-	public Move(Position initPosition, Position finalPosition,
-
-			Piece piece) {
-
-		this(initPosition, finalPosition, piece, false);
-
-	}
-
-	public Move(Position initPosition, Position finalPosition,
-
-			Piece piece, Boolean bool) {
+	public Move(Position initPosition, Position finalPosition, Piece piece,  Piece captured) {
 
 		this.initPosition = initPosition;
 
@@ -46,11 +36,7 @@ public class Move {
 
 		this.piece = piece;
 
-		if (bool) {
-
-			this.capturedPiece = finalPosition.getPiece();
-
-		}
+		this.capturedPiece = captured;
 
 	}
 
@@ -88,7 +74,7 @@ public class Move {
 	 * 
 	 * Returns the Position of the capture.
 	 * 
-	 * @return The Position were the capture occured.
+	 * @return The Position where the capture occured.
 	 * 
 	 */
 

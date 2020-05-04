@@ -2,12 +2,16 @@ package pieces;
 
 import player.PlayerType;
 
+import java.util.List;
+
+import game.*;
+
 public class Bishop extends Piece {
 
-	public Bishop(PlayerType play)
+	public Bishop(PlayerType play, Position pos)
 	{
 		
-			super(play);
+			super(play, pos);
 	}
 	
 	public String toString() 
@@ -27,5 +31,23 @@ public class Bishop extends Piece {
 		}
 		return " "+ret+"B ";
 		
+	}
+
+	@Override
+	public List<Move> getValidMoves(Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean isValidMove(Position end, Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Position[] getPath(Position end) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

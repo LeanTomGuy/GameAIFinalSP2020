@@ -2,11 +2,15 @@ package pieces;
 
 import player.PlayerType;
 
+import java.util.List;
+
+import game.*;
+
 public class EmptyPiece extends Piece {
 
-	public EmptyPiece(PlayerType player) {
+	public EmptyPiece(PlayerType player, Position pos) {
 
-		super(player);
+		super(player, pos);
 
 	}
 
@@ -20,18 +24,25 @@ public class EmptyPiece extends Piece {
 
 	}
 
-	public boolean isValidMove (Position init, Position final) {
 
-		return false;
+	@Override
+
+	public Position[] getPath(Position fin) {
+
+		return null;
 
 	}
 
 	@Override
+	public List<Move> getValidMoves(Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	public Position[] getPath(Position init, Position fin) {
-
-		return new Position[];
-
+	@Override
+	public Boolean isValidMove(Position end, Squares[][] squares) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

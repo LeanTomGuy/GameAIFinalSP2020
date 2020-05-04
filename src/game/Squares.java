@@ -1,6 +1,7 @@
 package game;
 
 import pieces.Piece;
+import player.PlayerType;
 
 public class Squares {
 	
@@ -16,5 +17,13 @@ public class Squares {
 	public void setPiece(Piece pce) 
 	{
 		this.pie = pce;
+	}
+	
+	public Piece getPiece() {
+		return pie;
+	}
+	
+	public Boolean isEmpty() {
+		return (pie.getPlayer() == PlayerType.NONE);
 	}
 }

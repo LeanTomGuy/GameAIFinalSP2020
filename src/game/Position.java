@@ -2,13 +2,11 @@ package game;
 
 public class Position{
 
-	int file;
 	int rank;
+	int file;
 	
-	public Position(int f, int r)
+	public Position(int r, int f)
 	{
-		// some array = upper
-		// some array = lower -> check if in lower and in range
 		this.file = f;
 		this.rank = r;
 	}
@@ -22,4 +20,16 @@ public class Position{
 	{
 		return this.rank;
 	}
+	
+	public boolean equals(Position position) {
+		return ((file == position.getFile()) && (rank == position.getRank()));
+	}
+	public boolean isValidPos() {
+		return((file >= 0 && file <8) && (rank >=0 && rank <8));
+	}
+	
+	public boolean isValidPos(Position pos) {
+		return ((pos.getFile() >= 0 && pos.getFile() < 8) && (pos.getRank() >= 0 && pos.getRank() < 8));
+	}
+
 }

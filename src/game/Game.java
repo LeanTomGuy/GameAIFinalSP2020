@@ -1,21 +1,21 @@
 package game;
 
 import player.*;
-import pieces.*;
+
+import java.util.List;
 
 public class Game {
 
 	int turn; 
 	PlayerType whoseTurn;
 	Board board;
+	List<Move> moveLst;
 	
 	public Game()
 	{
 		turn = 1;
 		whoseTurn = PlayerType.W;
 		board = new Board();
-		
-	
 	}
 	
 	void display() 
