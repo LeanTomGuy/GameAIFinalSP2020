@@ -38,7 +38,30 @@ public class Bishop extends Piece {
 	@Override
 	public List<Move> getValidMoves(Squares[][] squares) {
 		List<Move> moveLst = new ArrayList<Move>();
+		int thisRank = this.getPosition().getRank();
+		int thisFile = this.getPosition().getFile();
 		
+		for (int i = 1; i < 8 ; i++) 
+		{
+			Position tempPos = new Position(thisRank +  i, thisFile + i);
+			Position tempPos2 = new Position(thisRank - i, thisFile + i);
+			Position tempPos3 = new Position(thisRank - i, thisFile - i);
+			Position tempPos4 = new Position(thisRank + i, thisFile + i);
+	
+			Position[] arr = {tempPos, tempPos2, tempPos3, tempPos4};
+			for (Position elem : arr) 
+			{
+				if(elem.isValidPos()) 
+				{
+					if(isValidMove(elem, squares)) 
+					{
+						Move mve = new Move(this.getPosition(), elem, 
+								this, squares[elem.getRank()][elem.getFile()].getPiece());	
+						moveLst.add(mve);
+					}
+				}
+			}
+		}
 		return moveLst;
 	}
 
@@ -81,7 +104,8 @@ public class Bishop extends Piece {
 						}
 					}
 				}
-				return true;
+				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();			
+				
 			}
 		}
 		return false;
