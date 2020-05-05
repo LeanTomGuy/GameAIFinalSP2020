@@ -8,6 +8,8 @@ import game.*;
 
 public class EmptyPiece extends Piece {
 
+	public static int value = 0;
+	
 	public EmptyPiece(PlayerType player, Position pos) {
 
 		super(player, pos);
@@ -16,12 +18,16 @@ public class EmptyPiece extends Piece {
 
 	@Override
 
-	public String toString()
+	public String toDisplay()
 
 	{
 
 		return " _ ";
 
+	}
+	
+	public String toString() {
+		return "_";
 	}
 
 

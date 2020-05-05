@@ -13,10 +13,12 @@ public class Executor
 	{
 		Game game = new Game();
 		game.display();
-		/*
-		 *  while(!(game.gameOver()))
-		 *  	game.update();
-		 */
+		
+		for(int i = 0; i <3; i++) {
+			System.out.println("Input a valid move:\n");
+			game.update();
+			game.display();
+		}
 		
 	}
 }

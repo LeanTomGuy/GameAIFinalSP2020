@@ -10,13 +10,15 @@ import player.PlayerType;
 
 public class Bishop extends Piece {
 
+	public static int value = 3;
+	
 	public Bishop(PlayerType play, Position pos)
 	{
 		
 			super(play, pos);
 	}
 	
-	public String toString() 
+	public String toDisplay() 
 	{
 		String ret;
 		
@@ -33,6 +35,10 @@ public class Bishop extends Piece {
 		}
 		return " "+ret+"B ";
 		
+	}
+	
+	public String toString() {
+		return "B";
 	}
 
 	@Override

@@ -84,10 +84,10 @@ public class Board {
 		Position tempBishop2 = new Position(0,2);
 		squares[0][5].setPiece(new Bishop(PlayerType.W, tempBishop2));
 		//queen
-		Position tempQueen = new Position(0,3);
+		Position tempQueen = new Position(0,4);
 		squares[0][3].setPiece(new Queen(PlayerType.W, tempQueen));
 		//king
-		Position tempKing = new Position(0,4);
+		Position tempKing = new Position(0,3);
 		squares[0][4].setPiece(new King(PlayerType.W, tempKing));
 	}
 	
@@ -117,10 +117,10 @@ public class Board {
 		Position tempBishop2 = new Position(7,5);
 		squares[7][5].setPiece(new Bishop(PlayerType.B, tempBishop2));
 		//king 
-		Position tempKing = new Position(7,4);
+		Position tempKing = new Position(7,3);
 		squares[7][4].setPiece(new King(PlayerType.B, tempKing));
 		//queen
-		Position tempQueen = new Position(7,3);
+		Position tempQueen = new Position(7,4);
 		squares[7][3].setPiece(new Queen(PlayerType.B, tempQueen));
 	}
 	

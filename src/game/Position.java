@@ -31,5 +31,9 @@ public class Position{
 	public boolean isValidPos(Position pos) {
 		return ((pos.getFile() >= 0 && pos.getFile() < 8) && (pos.getRank() >= 0 && pos.getRank() < 8));
 	}
+	
+	public String toString() {
+		return "(" + rank + "," + file + ")"; 
+	}
 
 }

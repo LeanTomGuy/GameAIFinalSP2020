@@ -9,7 +9,7 @@ import game.Squares;
 import player.PlayerType;
 
 public class King extends Piece {
-
+	
 	public Boolean hasMoved = false;
 
 	public King(PlayerType play, Position pos) {
@@ -17,7 +17,7 @@ public class King extends Piece {
 		super(play, pos);
 	}
 
-	public String toString() {
+	public String toDisplay() {
 		String ret;
 
 		switch (this.getPlayer()) {
@@ -32,6 +32,10 @@ public class King extends Piece {
 		}
 
 		return " " + ret + "K ";
+	}
+	
+	public String toString() {
+		return "K";
 	}
 
 	@Override

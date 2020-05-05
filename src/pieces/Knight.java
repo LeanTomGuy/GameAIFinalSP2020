@@ -10,13 +10,15 @@ import player.PlayerType;
 
 public class Knight extends Piece {
 
+	public static int value = 3;
+	
 	public Knight(PlayerType play, Position pos)
 	{
 		
 			super(play, pos);
 	}
 	
-	public String toString() 
+	public String toDisplay() 
 	{
 		String ret;
 		
@@ -33,6 +35,10 @@ public class Knight extends Piece {
 		}
 		
 		return " "+ret+"Kn ";
+	}
+	
+	public String toString() {
+		return "Kn";
 	}
 
 	@Override

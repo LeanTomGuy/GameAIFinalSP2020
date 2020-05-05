@@ -10,6 +10,8 @@ import player.PlayerType;
 
 public class Rook extends Piece {
 
+	public static int value = 5;
+	
 	public Boolean hasMoved = false;
 	
 	public Rook(PlayerType play, Position pos)
@@ -18,7 +20,7 @@ public class Rook extends Piece {
 			super(play, pos);
 	}
 	
-	public String toString() 
+	public String toDisplay() 
 	{
 		String ret;
 		
@@ -35,6 +37,10 @@ public class Rook extends Piece {
 		}
 		
 		return " "+ret+"R ";
+	}
+	
+	public String toString() {
+		return "R";
 	}
 
 	@Override

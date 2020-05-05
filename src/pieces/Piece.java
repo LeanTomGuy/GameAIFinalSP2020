@@ -47,6 +47,8 @@ public abstract class Piece {
 	}
 	
 	public abstract String toString();
+	
+	public abstract String toDisplay();
 
 //getPlayerType instead
 	public PlayerType getPlayer() {

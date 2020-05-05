@@ -6,6 +6,8 @@ import java.util.*;
 
 public class Pawn extends Piece {
 
+	public static int value = 1;
+	
 //constructor
 
 	public Pawn(PlayerType play, Position pos) {
@@ -91,7 +93,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public String toString() {
+	public String toDisplay() {
 		String ret;
 
 		switch (this.getPlayer()) {
@@ -106,6 +108,10 @@ public class Pawn extends Piece {
 		}
 
 		return " " + ret + "P ";
+	}
+	
+	public String toString() {
+		return "P";
 	}
 
 }

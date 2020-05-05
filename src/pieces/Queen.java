@@ -10,12 +10,14 @@ import player.PlayerType;
 
 public class Queen extends Piece {
 
+	public static int value = 9;
+	
 	public Queen(PlayerType play, Position pos) {
 
 		super(play, pos);
 	}
 
-	public String toString() {
+	public String toDisplay() {
 		String ret;
 
 		switch (this.getPlayer()) {
@@ -30,6 +32,10 @@ public class Queen extends Piece {
 		}
 
 		return " " + ret + "Q ";
+	}
+	
+	public String toString() {
+		return "Q";
 	}
 
 	@Override
