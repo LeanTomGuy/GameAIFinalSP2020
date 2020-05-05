@@ -31,6 +31,17 @@ public class Move {
 		this.capture = !(captured.getPlayer() == PlayerType.NONE);
 	}
 
+	public Boolean isValidMove(Squares[][] squares ) 
+	{
+		if(!(this.initPosition.isValidPos() && this.finalPosition.isValidPos()))
+		{
+			return false;
+		}
+		
+		return (this.piece.isValidMove(this.finalPosition, squares));
+	}
+	
+	
 	public Position getInitPosition() {
 
 		return initPosition;

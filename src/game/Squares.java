@@ -1,6 +1,6 @@
 package game;
 
-import pieces.Piece;
+import pieces.*;
 import player.PlayerType;
 
 public class Squares {
@@ -12,6 +12,11 @@ public class Squares {
 	{
 		this.pos = p;
 		this.pie = p2;
+	}
+	
+	public void releasePiece() 
+	{
+		this.pie = new EmptyPiece(PlayerType.NONE, this.pos);
 	}
 	
 	public void setPiece(Piece pce) 

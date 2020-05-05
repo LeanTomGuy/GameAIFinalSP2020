@@ -13,5 +13,10 @@ public class Executor
 	{
 		Game game = new Game();
 		game.display();
+		/*
+		 *  while(!(game.gameOver()))
+		 *  	game.update();
+		 */
+		
 	}
 }

@@ -38,65 +38,61 @@ public class Queen extends Piece {
 		List<Move> moveLst = new ArrayList<Move>();
 		int thisRank = this.getPosition().getRank();
 		int thisFile = this.getPosition().getFile();
-		for (int i = 1; i < 8; i++) 
-		{
-			// bishop logic 
-			Position tempPos = new Position(thisRank +  i, thisFile + i);
+		for (int i = 1; i < 8; i++) {
+			// bishop logic
+			Position tempPos = new Position(thisRank + i, thisFile + i);
 			Position tempPos2 = new Position(thisRank - i, thisFile + i);
 			Position tempPos3 = new Position(thisRank - i, thisFile - i);
 			Position tempPos4 = new Position(thisRank + i, thisFile + i);
 
-			Position[] arr = {tempPos, tempPos2, tempPos3, tempPos4};
-			for (Position elem : arr) 
-			{
-				if(elem.isValidPos()) 
-				{
-					if(isValidMove(elem, squares)) 
-					{
-						Move mve = new Move(this.getPosition(), elem, 
-								this, squares[elem.getRank()][elem.getFile()].getPiece());	
+			Position[] arr = { tempPos, tempPos2, tempPos3, tempPos4 };
+			for (Position elem : arr) {
+				if (elem.isValidPos()) {
+					if (isValidMove(elem, squares)) {
+						Move mve = new Move(this.getPosition(), elem, this,
+								squares[elem.getRank()][elem.getFile()].getPiece());
 						moveLst.add(mve);
 					}
 				}
 			}
 		}
-		
-		// rook logic 
-		for(int i = thisRank+1; i < 8; i++) {
-			Position tempPos = new Position(i,thisFile);
-			if(isValidMove(tempPos, squares)) {
-				Move move = new Move(this.getPosition(), tempPos, 
-						this, squares[tempPos.getRank()][thisFile].getPiece());
-				moveLst.add(move);
-			}	
-		}
-		for(int i = thisRank-1; i >= 0; i--) {
-			Position tempPos = new Position(i,thisFile);
-			if(isValidMove(tempPos, squares)) {
-				Move move = new Move(this.getPosition(), tempPos, 
-						this, squares[tempPos.getRank()][thisFile].getPiece());
+
+		// rook logic
+		for (int i = thisRank + 1; i < 8; i++) {
+			Position tempPos = new Position(i, thisFile);
+			if (isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, this,
+						squares[tempPos.getRank()][thisFile].getPiece());
 				moveLst.add(move);
 			}
 		}
-		
-		for(int i = thisFile+1; i < 8; i++) {
-			Position tempPos = new Position(thisRank,i);
-			if(isValidMove(tempPos, squares)) {
-				Move move = new Move(this.getPosition(), tempPos, 
-						this, squares[thisRank][tempPos.getFile()].getPiece());
+		for (int i = thisRank - 1; i >= 0; i--) {
+			Position tempPos = new Position(i, thisFile);
+			if (isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, this,
+						squares[tempPos.getRank()][thisFile].getPiece());
 				moveLst.add(move);
 			}
 		}
-		
-		for(int i = thisFile-1; i >= 0; i--) {
-			Position tempPos = new Position(thisRank,i);
-			if(isValidMove(tempPos, squares)) {
-				Move move = new Move(this.getPosition(), tempPos, 
-						this, squares[thisRank][tempPos.getFile()].getPiece());
+
+		for (int i = thisFile + 1; i < 8; i++) {
+			Position tempPos = new Position(thisRank, i);
+			if (isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, this,
+						squares[thisRank][tempPos.getFile()].getPiece());
 				moveLst.add(move);
 			}
 		}
-		
+
+		for (int i = thisFile - 1; i >= 0; i--) {
+			Position tempPos = new Position(thisRank, i);
+			if (isValidMove(tempPos, squares)) {
+				Move move = new Move(this.getPosition(), tempPos, this,
+						squares[thisRank][tempPos.getFile()].getPiece());
+				moveLst.add(move);
+			}
+		}
+
 		return moveLst;
 	}
 
@@ -108,8 +104,8 @@ public class Queen extends Piece {
 			int thisFile = this.getPosition().getFile();
 			int endRank = end.getRank();
 			int endFile = end.getFile();
-			int rankDiff = Math.abs(thisRank-endRank);
-			int fileDiff = Math.abs(thisFile-endFile);
+			int rankDiff = Math.abs(thisRank - endRank);
+			int fileDiff = Math.abs(thisFile - endFile);
 			if (thisRank - endRank == 0 || thisFile - endFile == 0) {
 				if (thisRank - endRank != 0) {
 					if (thisRank > endRank) {
@@ -142,39 +138,37 @@ public class Queen extends Piece {
 					}
 					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
 				}
-			}
-			else if(rankDiff == fileDiff)
-			{
-				if(thisRank > endRank) {
-					if(thisFile > endFile) {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank-i][thisFile-i].isEmpty())) {
+			} else if (rankDiff == fileDiff) {
+				if (thisRank > endRank) {
+					if (thisFile > endFile) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank - i][thisFile - i].isEmpty())) {
 								return false;
-								}
+							}
 						}
 					} else {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank-i][thisFile+i].isEmpty())) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank - i][thisFile + i].isEmpty())) {
 								return false;
 							}
 						}
 					}
 				} else {
-					if(thisFile > endFile) {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank+i][thisFile-i].isEmpty())) {
+					if (thisFile > endFile) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank + i][thisFile - i].isEmpty())) {
 								return false;
-								}
+							}
 						}
 					} else {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank+i][thisFile+i].isEmpty())) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank + i][thisFile + i].isEmpty())) {
 								return false;
 							}
 						}
 					}
 				}
-				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();			
+				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
 			}
 		}
 
