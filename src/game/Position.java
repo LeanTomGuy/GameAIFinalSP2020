@@ -11,6 +11,10 @@ public class Position{
 		this.rank = r;
 	}
 	
+	public Position copy() 
+	{
+		return new Position(this.getRank(),this.getFile());
+	}
 	public int getFile() 
 	{
 		return this.file;

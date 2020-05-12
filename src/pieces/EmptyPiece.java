@@ -22,7 +22,7 @@ public class EmptyPiece extends Piece {
 
 	{
 
-		return " _ ";
+		return "   _   ";
 
 	}
 	
@@ -40,13 +40,13 @@ public class EmptyPiece extends Piece {
 	}
 
 	@Override
-	public List<Move> getValidMoves(Squares[][] squares) {
+	public List<Move> getValidMoves(Squares[][] squares, Game game) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Boolean isValidMove(Position end, Squares[][] squares) {
+	public Boolean isValidMove(Position end, Squares[][] squares, Game game) {
 		// TODO Auto-generated method stub
 		return false;
 	}

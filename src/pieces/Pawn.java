@@ -15,39 +15,76 @@ public class Pawn extends Piece {
 	};
 
 	@Override
-	public Boolean isValidMove(Position fin, Squares[][] squares) {
+	public Boolean isValidMove(Position end, Squares[][] squares, Game game) {
 
-		if (this.getPosition().isValidPos() && fin.isValidPos() && !this.getPosition().equals(fin)) {
+		if (this.getPosition().isValidPos() && end.isValidPos() && !this.getPosition().equals(end)) {
 			int thisRank = this.getPosition().getRank();
 			int thisFile = this.getPosition().getFile();
-			if ((Math.abs(thisRank - fin.getRank()) == 1) && (thisFile == fin.getFile()))
+			int endRank = end.getRank();
+			int endFile = end.getFile();
+			if ((Math.abs(thisRank - end.getRank()) == 1) && (thisFile == end.getFile()))
 // normal moves
 			{
 				if (this.getPlayer() == PlayerType.W) {
-					return (thisRank < fin.getRank()
-							&& squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() == PlayerType.NONE);
+					Move tmpMove = new Move(end, this.getPosition(), this,squares[endRank][endFile].getPiece());
+					
+					try {
+						return (thisRank < end.getRank()
+								&& squares[end.getRank()][end.getFile()].getPiece().getPlayer() == PlayerType.NONE) 
+								&& !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				} else {
-					return (thisRank > fin.getRank()
-							&& squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() == PlayerType.NONE);
+					Move tmpMove = new Move(end, this.getPosition(), this,squares[endRank][endFile].getPiece());
+					
+					try {
+						return (thisRank > end.getRank()
+								&& squares[end.getRank()][end.getFile()].getPiece().getPlayer() == PlayerType.NONE
+								&& !game.moveMakesCheck(tmpMove, game));
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
-			if (Math.abs(thisRank - fin.getRank()) == 2 && (thisFile == fin.getFile())
+			if (Math.abs(thisRank - end.getRank()) == 2 && (thisFile == end.getFile())
 					&& (thisRank == 1 || (thisRank == 6))) {
 				if (this.getPlayer() == PlayerType.W) {
 					Position tempPos = new Position(thisRank + 1, thisFile);
-					return (squares[tempPos.getRank()][tempPos.getFile()].isEmpty() && thisRank < fin.getRank()
-							&& squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() == PlayerType.NONE);
+					Move tmpMove = new Move(end, this.getPosition(), this,squares[endRank][endFile].getPiece());
+					
+					try {
+						return (squares[tempPos.getRank()][tempPos.getFile()].isEmpty() && thisRank < end.getRank()
+								&& squares[end.getRank()][end.getFile()].getPiece().getPlayer() == PlayerType.NONE)
+								&& !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				} else {
 					Position tempPos = new Position(thisRank - 1, thisFile);
-					return (squares[tempPos.getRank()][tempPos.getFile()].isEmpty() && thisRank > fin.getRank()
-							&& squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() == PlayerType.NONE);
+					Move tmpMove = new Move(end, this.getPosition(), this,squares[endRank][endFile].getPiece());
+					
+					try {
+						return (squares[tempPos.getRank()][tempPos.getFile()].isEmpty() && thisRank > end.getRank()
+								&& squares[end.getRank()][end.getFile()].getPiece().getPlayer() == PlayerType.NONE)
+								&& !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
-			if ((Math.abs(thisRank - fin.getRank()) == 1) && (Math.abs(thisFile - fin.getFile()) == 1)) {
-				return ((squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() != PlayerType.NONE)
-						&& (squares[fin.getRank()][fin.getFile()].getPiece().getPlayer() != this.getPlayer()));
+			if ((Math.abs(thisRank - end.getRank()) == 1) && (Math.abs(thisFile - end.getFile()) == 1)) {
+				Move tmpMove = new Move(end, this.getPosition(), this,squares[endRank][endFile].getPiece());
+				
+				try {
+					return ((squares[end.getRank()][end.getFile()].getPiece().getPlayer() != PlayerType.NONE)
+							&& (squares[end.getRank()][end.getFile()].getPiece().getPlayer() != this.getPlayer()))
+							&& !game.moveMakesCheck(tmpMove, game);
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
 
 // need to address en passant
@@ -56,13 +93,13 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public List<Move> getValidMoves(Squares[][] squares) {
+	public List<Move> getValidMoves(Squares[][] squares, Game game) {
 		List<Move> moveList = new ArrayList<Move>();
-		for (int i = this.getPosition().getRank() + 1; i <= this.getPosition().getRank() + 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = this.getPosition().getRank() -2 ; i <= this.getPosition().getRank() + 2; i++) {
+			for (int j = this.getPosition().getFile(); j <= 7; j++) {
 				Position tempPos = new Position(i, j);
 				if (tempPos.isValidPos()) {
-					if (isValidMove(tempPos, squares)) {
+					if (isValidMove(tempPos, squares, game)) {
 						Piece capture = squares[tempPos.getRank()][tempPos.getFile()].getPiece();
 						Move move = new Move(this.getPosition(), tempPos, this, capture);
 						moveList.add(move);
@@ -75,18 +112,18 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public Position[] getPath(Position finalPos) {
+	public Position[] getPath(Position endalPos) {
 //This is for pawn captures
-		if (this.getPosition().getFile() != finalPos.getFile()) {
-			return new Position[] { this.getPosition(), finalPos };
+		if (this.getPosition().getFile() != endalPos.getFile()) {
+			return new Position[] { this.getPosition(), endalPos };
 		}
 //This is for normal pawn moves and first pawn moves.
-		int pathLength = Math.abs(this.getPosition().getRank() - finalPos.getRank()) + 1;
+		int pathLength = Math.abs(this.getPosition().getRank() - endalPos.getRank()) + 1;
 		Position[] path = new Position[pathLength];
 
 		for (int cnt = 0; cnt < pathLength; cnt++) {
 			path[cnt] = new Position(this.getPosition().getFile(),
-					Math.min(this.getPosition().getRank(), finalPos.getRank()) + cnt);
+					Math.min(this.getPosition().getRank(), endalPos.getRank()) + cnt);
 		}
 
 		return path;
@@ -107,7 +144,7 @@ public class Pawn extends Piece {
 			ret = "";
 		}
 
-		return " " + ret + "P ";
+		return "   " + ret + "P  ";
 	}
 	
 	public String toString() {

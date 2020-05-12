@@ -3,6 +3,7 @@ package pieces;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.Game;
 import game.Move;
 import game.Position;
 import game.Squares;
@@ -11,7 +12,7 @@ import player.PlayerType;
 public class Queen extends Piece {
 
 	public static int value = 9;
-	
+
 	public Queen(PlayerType play, Position pos) {
 
 		super(play, pos);
@@ -31,15 +32,15 @@ public class Queen extends Piece {
 			ret = "";
 		}
 
-		return " " + ret + "Q ";
+		return "  " + ret + "Q   ";
 	}
-	
+
 	public String toString() {
 		return "Q";
 	}
 
 	@Override
-	public List<Move> getValidMoves(Squares[][] squares) {
+	public List<Move> getValidMoves(Squares[][] squares, Game game) {
 		// TODO Auto-generated method stub
 		List<Move> moveLst = new ArrayList<Move>();
 		int thisRank = this.getPosition().getRank();
@@ -54,7 +55,7 @@ public class Queen extends Piece {
 			Position[] arr = { tempPos, tempPos2, tempPos3, tempPos4 };
 			for (Position elem : arr) {
 				if (elem.isValidPos()) {
-					if (isValidMove(elem, squares)) {
+					if (isValidMove(elem, squares, game)) {
 						Move mve = new Move(this.getPosition(), elem, this,
 								squares[elem.getRank()][elem.getFile()].getPiece());
 						moveLst.add(mve);
@@ -66,7 +67,7 @@ public class Queen extends Piece {
 		// rook logic
 		for (int i = thisRank + 1; i < 8; i++) {
 			Position tempPos = new Position(i, thisFile);
-			if (isValidMove(tempPos, squares)) {
+			if (isValidMove(tempPos, squares, game)) {
 				Move move = new Move(this.getPosition(), tempPos, this,
 						squares[tempPos.getRank()][thisFile].getPiece());
 				moveLst.add(move);
@@ -74,7 +75,7 @@ public class Queen extends Piece {
 		}
 		for (int i = thisRank - 1; i >= 0; i--) {
 			Position tempPos = new Position(i, thisFile);
-			if (isValidMove(tempPos, squares)) {
+			if (isValidMove(tempPos, squares, game)) {
 				Move move = new Move(this.getPosition(), tempPos, this,
 						squares[tempPos.getRank()][thisFile].getPiece());
 				moveLst.add(move);
@@ -83,7 +84,7 @@ public class Queen extends Piece {
 
 		for (int i = thisFile + 1; i < 8; i++) {
 			Position tempPos = new Position(thisRank, i);
-			if (isValidMove(tempPos, squares)) {
+			if (isValidMove(tempPos, squares, game)) {
 				Move move = new Move(this.getPosition(), tempPos, this,
 						squares[thisRank][tempPos.getFile()].getPiece());
 				moveLst.add(move);
@@ -92,7 +93,7 @@ public class Queen extends Piece {
 
 		for (int i = thisFile - 1; i >= 0; i--) {
 			Position tempPos = new Position(thisRank, i);
-			if (isValidMove(tempPos, squares)) {
+			if (isValidMove(tempPos, squares, game)) {
 				Move move = new Move(this.getPosition(), tempPos, this,
 						squares[thisRank][tempPos.getFile()].getPiece());
 				moveLst.add(move);
@@ -103,7 +104,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public Boolean isValidMove(Position end, Squares[][] squares) {
+	public Boolean isValidMove(Position end, Squares[][] squares, Game game) {
 		// TODO Auto-generated method stub
 		if (end.isValidPos() && !this.getPosition().equals(end)) {
 			int thisRank = this.getPosition().getRank();
@@ -127,7 +128,13 @@ public class Queen extends Piece {
 							}
 						}
 					}
-					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
+					Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+					try {
+						return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer()
+								&& !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				} else {
 					if (thisFile > endFile) {
 						for (int i = thisFile - 1; i > endFile; i--) {
@@ -142,7 +149,12 @@ public class Queen extends Piece {
 							}
 						}
 					}
-					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
+					Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+					try {
+						return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer() && !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
 				}
 			} else if (rankDiff == fileDiff) {
 				if (thisRank > endRank) {
@@ -174,7 +186,12 @@ public class Queen extends Piece {
 						}
 					}
 				}
-				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
+				Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+				try {
+					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer() && !game.moveMakesCheck(tmpMove, game);
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -183,7 +200,48 @@ public class Queen extends Piece {
 
 	@Override
 	public Position[] getPath(Position end) {
-		// TODO Auto-generated method stub
-		return null;
+		Position[] path;
+		//If it is a rook move
+		if (this.getPosition().getRank()==end.getRank() ||
+				this.getPosition().getFile()==end.getFile())
+		{
+			int pathLength=Math.abs(this.getPosition().getRank()-end.getRank())
+					+Math.abs(this.getPosition().getFile()-end.getFile())+1;
+			path=new Position[pathLength];
+			for (int cnt=0;cnt<pathLength;cnt++)
+			{
+				if ((this.getPosition().getRank()==end.getRank())){
+					path[cnt]=new Position(this.getPosition().getRank(),Math.min(this.getPosition().getFile(),end.getFile())+cnt);
+				}
+				else{
+					path[cnt]=new Position(Math.min(this.getPosition().getRank(),end.getRank())+cnt,this.getPosition().getFile());
+				}
+			}
+			
+		}
+		else
+		{
+			//If it a bishop move.
+			int pathLength=( Math.abs(this.getPosition().getRank()-end.getRank())+
+					Math.abs(this.getPosition().getFile()-end.getFile()) )/2+1;
+			path=new Position[pathLength];
+	
+			//Integer.signum(a) provides the sign of a number 1 if positive and -1 if negative.
+			//In this case i am considering this.getPosition() as the first point and end as second
+			int i_X=Integer.signum(end.getRank()-this.getPosition().getRank());
+			int i_Y=Integer.signum(end.getFile()-this.getPosition().getFile());
+	
+			for (int cnt=0;cnt<pathLength;cnt++)
+			{
+				path[cnt]=new Position(this.getPosition().getRank()+i_X*cnt,this.getPosition().getFile()+i_Y*cnt);
+			}
+		}
+	
+		
+		
+		
+		
+		return path;
 	}
+
 }

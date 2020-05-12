@@ -3,14 +3,13 @@ package pieces;
 import java.util.ArrayList;
 import java.util.List;
 
-import game.Move;
-import game.Position;
-import game.Squares;
+import game.*;
 import player.PlayerType;
 
 public class King extends Piece {
-	
+
 	public Boolean hasMoved = false;
+	public Boolean inCheck = false;
 
 	public King(PlayerType play, Position pos) {
 
@@ -31,15 +30,15 @@ public class King extends Piece {
 			ret = "";
 		}
 
-		return " " + ret + "K ";
+		return "  " + ret + "K   ";
 	}
-	
+
 	public String toString() {
 		return "K";
 	}
 
 	@Override
-	public List<Move> getValidMoves(Squares[][] squares) {
+	public List<Move> getValidMoves(Squares[][] squares, Game game) {
 		List<Move> moveLst = new ArrayList<Move>();
 		int thisRank = this.getPosition().getRank();
 		int thisFile = this.getPosition().getFile();
@@ -52,11 +51,13 @@ public class King extends Piece {
 		Position tempPos6 = new Position(thisRank, thisFile - 1);
 		Position tempPos7 = new Position(thisRank + 1, thisFile);
 		Position tempPos8 = new Position(thisRank - 1, thisFile);
-
-		Position[] arr = { tempPos, tempPos2, tempPos3, tempPos4, tempPos5, tempPos6, tempPos7, tempPos8 };
+		Position tempPos9 = new Position(thisRank, thisFile+2);
+		Position tempPos10 = new Position(thisRank, thisFile-2);
+		
+		Position[] arr = { tempPos, tempPos2, tempPos3, tempPos4, tempPos5, tempPos6, tempPos7, tempPos8, tempPos9, tempPos10};
 		for (Position elem : arr) {
 			if (elem.isValidPos()) {
-				if (isValidMove(elem, squares)) {
+				if (isValidMove(elem, squares, game)) {
 					Move mve = new Move(this.getPosition(), elem, this,
 							squares[elem.getRank()][elem.getFile()].getPiece());
 					moveLst.add(mve);
@@ -69,23 +70,79 @@ public class King extends Piece {
 	}
 
 	@Override
-	public Boolean isValidMove(Position end, Squares[][] squares) {
+	public Boolean isValidMove(Position end, Squares[][] squares, Game game) {
 		if (end.isValidPos() && !end.equals(this.getPosition())) {
 			int thisRank = this.getPosition().getRank();
 			int thisFile = this.getPosition().getFile();
 			int endRank = end.getRank();
 			int endFile = end.getFile();
+
 			if ((Math.abs(thisRank - endRank) == 1 && thisFile == endFile)
 					|| (Math.abs(thisFile - endFile) == 1 && thisRank == endRank)
 					|| (Math.abs(thisFile - endFile) == 1 && Math.abs(thisRank - endRank) == 1)) {
-				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
+				Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+				try {
+					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer()
+							&& !game.moveMakesCheck(tmpMove, game);
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
 			}
-		} // castling not included (for now)
+
+			if (Math.abs(thisFile - endFile) == 2 && !hasMoved) {
+				if (thisFile > endFile) {
+					Piece rook = game.board.retSquare(thisRank, 0).getPiece();
+					if (rook.toString().equals("R") && !rook.hasMoved) {
+						try {
+							if (!game.isCheck(this.getPlayer())) {
+								for (int i = thisFile - 1; i >= 1; i--) {
+									if (!game.board.retSquare(thisRank, i).isEmpty()) {
+										return false;
+									}
+								}
+								Move tmpMove2 = new Move(this.getPosition(), new Position(thisRank, thisFile-1), this, game.board.retSquare(thisRank, thisFile-1).getPiece());
+								return !game.moveMakesCheck(tmpMove2, game);
+								
+							} else {
+								return false;
+							}
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					Piece rook = game.board.retSquare(thisRank, 7).getPiece();
+					if (rook.toString().equals("R") && !rook.hasMoved) {
+						try {
+							if (!game.isCheck(this.getPlayer())) {
+								for (int i = thisFile + 1; i < 7; i++) {
+									if (!game.board.retSquare(thisRank, i).isEmpty()) {
+										return false;
+									}
+								}
+								Move tmpMove2 = new Move(this.getPosition(), new Position(thisRank, thisFile+1), this, game.board.retSquare(thisRank, thisFile+1).getPiece());
+								return !game.moveMakesCheck(tmpMove2, game);
+							}
+							else {
+								return false;
+							}
+						} catch (CloneNotSupportedException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
 		return false;
+	}
+
+	public void setCheck() {
+		inCheck = true;
 	}
 
 	@Override
 	public Position[] getPath(Position end) {
-		return null;
+		Position[] arr = { this.getPosition(), end };
+		return arr;
 	}
 }

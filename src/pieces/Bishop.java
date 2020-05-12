@@ -3,6 +3,7 @@ package pieces;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.Game;
 import game.Move;
 import game.Position;
 import game.Squares;
@@ -11,19 +12,16 @@ import player.PlayerType;
 public class Bishop extends Piece {
 
 	public static int value = 3;
-	
-	public Bishop(PlayerType play, Position pos)
-	{
-		
-			super(play, pos);
+
+	public Bishop(PlayerType play, Position pos) {
+
+		super(play, pos);
 	}
-	
-	public String toDisplay() 
-	{
+
+	public String toDisplay() {
 		String ret;
-		
-		switch(this.getPlayer()) 
-		{
+
+		switch (this.getPlayer()) {
 		case W:
 			ret = "W";
 			break;
@@ -33,36 +31,32 @@ public class Bishop extends Piece {
 		default:
 			ret = "";
 		}
-		return " "+ret+"B ";
-		
+		return "  " + ret + "B   ";
+
 	}
-	
+
 	public String toString() {
 		return "B";
 	}
 
 	@Override
-	public List<Move> getValidMoves(Squares[][] squares) {
+	public List<Move> getValidMoves(Squares[][] squares, Game game) {
 		List<Move> moveLst = new ArrayList<Move>();
 		int thisRank = this.getPosition().getRank();
 		int thisFile = this.getPosition().getFile();
-		
-		for (int i = 1; i < 8 ; i++) 
-		{
-			Position tempPos = new Position(thisRank +  i, thisFile + i);
+
+		for (int i = 1; i < 8; i++) {
+			Position tempPos = new Position(thisRank + i, thisFile + i);
 			Position tempPos2 = new Position(thisRank - i, thisFile + i);
 			Position tempPos3 = new Position(thisRank - i, thisFile - i);
 			Position tempPos4 = new Position(thisRank + i, thisFile + i);
-	
-			Position[] arr = {tempPos, tempPos2, tempPos3, tempPos4};
-			for (Position elem : arr) 
-			{
-				if(elem.isValidPos()) 
-				{
-					if(isValidMove(elem, squares)) 
-					{
-						Move mve = new Move(this.getPosition(), elem, 
-								this, squares[elem.getRank()][elem.getFile()].getPiece());	
+
+			Position[] arr = { tempPos, tempPos2, tempPos3, tempPos4 };
+			for (Position elem : arr) {
+				if (elem.isValidPos()) {
+					if (isValidMove(elem, squares, game)) {
+						Move mve = new Move(this.getPosition(), elem, this,
+								squares[elem.getRank()][elem.getFile()].getPiece());
 						moveLst.add(mve);
 					}
 				}
@@ -72,46 +66,52 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public Boolean isValidMove(Position end, Squares[][] squares) {
-		if(!this.getPosition().equals(end) && end.isValidPos()) {
+	public Boolean isValidMove(Position end, Squares[][] squares, Game game) {
+		if (!this.getPosition().equals(end) && end.isValidPos()) {
 			int thisRank = this.getPosition().getRank();
 			int thisFile = this.getPosition().getFile();
 			int endRank = end.getRank();
 			int endFile = end.getFile();
-			int rankDiff = Math.abs(thisRank-endRank);
-			int fileDiff = Math.abs(thisFile-endFile);
-			if(rankDiff == fileDiff) {
-				if(thisRank > endRank) {
-					if(thisFile > endFile) {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank-i][thisFile-i].isEmpty())) {
+			int rankDiff = Math.abs(thisRank - endRank);
+			int fileDiff = Math.abs(thisFile - endFile);
+			if (rankDiff == fileDiff) {
+				if (thisRank > endRank) {
+					if (thisFile > endFile) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank - i][thisFile - i].isEmpty())) {
 								return false;
-								}
+							}
 						}
 					} else {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank-i][thisFile+i].isEmpty())) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank - i][thisFile + i].isEmpty())) {
 								return false;
 							}
 						}
 					}
 				} else {
-					if(thisFile > endFile) {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank+i][thisFile-i].isEmpty())) {
+					if (thisFile > endFile) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank + i][thisFile - i].isEmpty())) {
 								return false;
-								}
+							}
 						}
 					} else {
-						for(int i = 1; i < rankDiff; i++) {
-							if(!(squares[thisRank+i][thisFile+i].isEmpty())) {
+						for (int i = 1; i < rankDiff; i++) {
+							if (!(squares[thisRank + i][thisFile + i].isEmpty())) {
 								return false;
 							}
 						}
 					}
 				}
-				return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();			
-				
+				Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+				try {
+					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer()
+							&& !game.moveMakesCheck(tmpMove, game);
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+
 			}
 		}
 		return false;
@@ -119,7 +119,17 @@ public class Bishop extends Piece {
 
 	@Override
 	public Position[] getPath(Position end) {
-		// TODO Auto-generated method stub
-		return null;
+		int pathLength = Math.abs(this.getPosition().getRank() - end.getRank()) + 1;
+		Position[] arr = new Position[pathLength];
+
+		int i_X = Integer.signum(end.getRank() - this.getPosition().getRank());
+		int i_Y = Integer.signum(end.getFile() - this.getPosition().getFile());
+
+		for (int cnt = 0; cnt < pathLength; cnt++) {
+			arr[cnt] = new Position(this.getPosition().getRank() + i_X * cnt, this.getPosition().getFile() + i_Y * cnt);
+		}
+
+		return arr;
+
 	}
 }

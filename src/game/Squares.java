@@ -16,18 +16,25 @@ public class Squares {
 	
 	public void releasePiece() 
 	{
+	//	System.out.println("piece released at "+ this.pos.toString());
 		this.pie = new EmptyPiece(PlayerType.NONE, this.pos);
 	}
 	
 	public void setPiece(Piece pce) 
 	{
+		//System.out.println("setPiece() called with " + pce.toString());
 		this.pie = pce;
+		
 	}
 	
 	public Piece getPiece() {
 		return pie;
 	}
 	
+	public Position getPosition() 
+	{
+		return pos;
+	}
 	public Boolean isEmpty() {
 		return (pie.getPlayer() == PlayerType.NONE);
 	}
