@@ -107,7 +107,29 @@ public class Game implements Cloneable {
 		Position mIPos, mFPos;
 		Piece mPce, mCap;
 
-		if (matcher.matches()) {
+		if (input.contains(castlePat)) {
+	//		System.out.println("reached castling");
+			String whichSide = input.substring(7).toLowerCase();
+			switch (whichSide) {
+			case "k":
+				mPce = getKingSquare(whoseTurn).getPiece();
+				mIPos = getKingSquare(whoseTurn).getPosition();
+				mFPos = new Position(mIPos.getRank(), mIPos.getFile() + 2);
+				mCap = board.retSquare(mFPos).getPiece();
+
+			case "q":
+				mPce = getKingSquare(whoseTurn).getPiece();
+				mIPos = getKingSquare(whoseTurn).getPosition();
+				mFPos = new Position(mIPos.getRank(), mIPos.getFile() - 2);
+				mCap = board.retSquare(mFPos).getPiece();
+
+			default:
+				mIPos = new Position(-1, -1);
+				mFPos = new Position(-1, -1);
+				mPce = new EmptyPiece(PlayerType.NONE, mIPos);
+				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
+			}
+		} else if (matcher.matches()) {
 
 			switch (input.substring(0, 1).toUpperCase()) {
 
@@ -118,7 +140,7 @@ public class Game implements Cloneable {
 					mPce = board.squares[mIPos.getRank()][mIPos.getFile()].getPiece();
 					mCap = board.squares[mFPos.getRank()][mFPos.getFile()].getPiece();
 					if (!(mPce.toString().equals("Kn") && mPce.getPlayer() == whoseTurn)) {
-						System.out.println(mPce.toDisplay());
+	//					System.out.println(mPce.toDisplay());
 
 						mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 					}
@@ -155,8 +177,8 @@ public class Game implements Cloneable {
 				mFPos = stringToPosition(input.substring(5, 7));
 				mPce = board.squares[mIPos.getRank()][mIPos.getFile()].getPiece();
 				mCap = board.squares[mFPos.getRank()][mFPos.getFile()].getPiece();
-				System.out.println(mPce.toString());
-				System.out.println(whoseTurn);
+//				System.out.println(mPce.toString());
+//				System.out.println(whoseTurn);
 				if (!(mPce.toString().equals("P") && mPce.getPlayer() == whoseTurn)) {
 					mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 				}
@@ -177,31 +199,7 @@ public class Game implements Cloneable {
 				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
 
 			}
-		} else if (input.contains(castlePat)) {
-			System.out.println("reached castling");
-			String whichSide = input.substring(7).toLowerCase();
-			switch (whichSide) {
-			case "k":
-				mPce = getKingSquare(whoseTurn).getPiece();
-				mIPos = getKingSquare(whoseTurn).getPosition();
-				mFPos = new Position(mIPos.getRank(), mIPos.getFile() + 2);
-				mCap = board.retSquare(mFPos).getPiece();
-
-			case "q":
-				mPce = getKingSquare(whoseTurn).getPiece();
-				mIPos = getKingSquare(whoseTurn).getPosition();
-				mFPos = new Position(mIPos.getRank(), mIPos.getFile() - 2);
-				mCap = board.retSquare(mFPos).getPiece();
-
-			default:
-				mIPos = new Position(-1, -1);
-				mFPos = new Position(-1, -1);
-				mPce = new EmptyPiece(PlayerType.NONE, mIPos);
-				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
-			}
-		}
-
-		else {
+		} else {
 			mIPos = new Position(-1, -1);
 			mFPos = new Position(-1, -1);
 			mPce = new EmptyPiece(PlayerType.NONE, mIPos);
@@ -223,6 +221,7 @@ public class Game implements Cloneable {
 		System.out.println("Current turn is : "+whoseTurn);
 
 		Move move = agentTurn.getMove(this.clone(), 10000);
+//		System.out.println(move.toString());
 		
 		if (move.getPiece().toString().equals("_")) {
 			System.out.println("Not valid, try again.\n");
@@ -242,8 +241,8 @@ public class Game implements Cloneable {
 			if (move.getCapturedPiece().getPlayer() != whoseTurn) {
 				advanceGame(move);
 				moveLst.add(move);
-				System.out.println("move made\n");
-				System.out.println("new:" + whoseTurn);
+//				System.out.println("move made\n");
+//				System.out.println("new:" + whoseTurn);
 				if (whoseTurn == PlayerType.B)
 					turn += 1;
 			}
@@ -291,19 +290,21 @@ public class Game implements Cloneable {
 					validMoves.addAll(each.getValidMoves(board.squares, this.clone()));
 				}
 			case B:
-				for (Piece each : board.whitePieces) {
+				for (Piece each : board.blackPieces) {
 					validMoves.addAll(each.getValidMoves(board.squares, this.clone()));
 				}
 			default:
 
 			}
+			for (Move mv : validMoves) {
+//				System.out.println(mv.toString());
+			}
 			return validMoves.isEmpty(); // we back
 		}
 	}
 
-	public void isGameOver() throws CloneNotSupportedException {
-		if (isCheckmate(whoseTurn) || isDraw())
-			gameOver = true;
+	public Boolean isGameOver() throws CloneNotSupportedException {
+		return (isCheckmate(PlayerType.W) || isCheckmate(PlayerType.B) || isDraw());
 	}
 
 	public Boolean isDraw() throws CloneNotSupportedException {
@@ -362,7 +363,7 @@ public class Game implements Cloneable {
 	}
 
 	public void endGame() {
-//		sc.close();
+		System.out.println("Game over; if this is a surprise to you, you probably got mated lol.");
 	}
 
 	public Boolean moveMakesCheck(Move move, Game copy) throws CloneNotSupportedException {
@@ -385,24 +386,21 @@ public class Game implements Cloneable {
 				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 7).getPiece();
 				newBoard.retSquare(movedRook.getPosition()).releasePiece();
 				movedRook.setPosition(new Position(movedRook.getPosition().getRank(), 5));
-				newBoard.copyBoard().retSquare(movedRook.getPosition()).releasePiece();
-				newBoard.copyBoard().retSquare(movedRook.getPosition()).setPiece(movedRook);
+				newBoard.retSquare(movedRook.getPosition()).releasePiece();
+				newBoard.retSquare(movedRook.getPosition()).setPiece(movedRook);
 				changeTurns();
 				changeAgentTurn();
-				;
+				
 			} else {
 				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 0).getPiece();
-				newBoard.copyBoard().retSquare(movedRook.getPosition()).releasePiece();
+				newBoard.retSquare(movedRook.getPosition()).releasePiece();
 				movedRook.setPosition(new Position(movedRook.getPosition().getRank(), 3));
-				newBoard.copyBoard().retSquare(movedRook.getPosition()).releasePiece();
-				newBoard.copyBoard().retSquare(movedRook.getPosition()).setPiece(movedRook);
+				newBoard.retSquare(movedRook.getPosition()).releasePiece();
+				newBoard.retSquare(movedRook.getPosition()).setPiece(movedRook);
 				changeTurns();
 				changeAgentTurn();
 			}
 		} else {
-			if (movedPiece.toString().equals("R") || movedPiece.toString().equals("K"))
-				movedPiece.hasMoved = true;
-
 			if (move.isCapture()) {
 				if (move.getCapturedPiece().getPlayer() == PlayerType.W)
 					newBoard.whitePieces.remove(move.getCapturedPiece());
@@ -430,7 +428,7 @@ public class Game implements Cloneable {
 		System.out.println(move.toString());
 		Piece movedPiece = move.getPiece();
 		if (move.isCastle()) {
-			System.out.println("is castle");
+//			System.out.println("is castle");
 			movedPiece.setPosition(move.getFinalPosition());
 			board.retSquare(move.getInitPosition()).releasePiece();
 			board.retSquare(move.getFinalPosition()).releasePiece();
@@ -444,7 +442,6 @@ public class Game implements Cloneable {
 				board.retSquare(movedRook.getPosition()).setPiece(movedRook);
 				changeTurns();
 				changeAgentTurn();
-				;
 			} else {
 				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 0).getPiece();
 				board.retSquare(movedRook.getPosition()).releasePiece();
@@ -455,23 +452,23 @@ public class Game implements Cloneable {
 				changeAgentTurn();
 			}
 		} else {
-			System.out.println("not castle");
+//			System.out.println("not castle");
 			if (movedPiece.toString().equals("R") || movedPiece.toString().equals("K"))
 				movedPiece.hasMoved = true;
 
 			if (move.isCapture()) {
-				System.out.println("isCapture");
+//				System.out.println("isCapture");
 				if (move.getCapturedPiece().getPlayer() == PlayerType.W)
 					board.whitePieces.remove(move.getCapturedPiece());
 				else
 					board.blackPieces.remove(move.getCapturedPiece());
 			}
 			movedPiece.setPosition(move.getFinalPosition());
-			System.out.println(move.toString());
-			System.out.println("initial at " + move.getInitPosition().toString() + "|" 
-			+ move.getInitPosition().getRank() + move.getInitPosition().getFile());
-			System.out.println("final at " + move.getFinalPosition().toString() + "|" 
-					+ move.getFinalPosition().getRank() + move.getFinalPosition().getFile());
+//			System.out.println(move.toString());
+//			System.out.println("initial at " + move.getInitPosition().toString() + "|" 
+//			+ move.getInitPosition().getRank() + move.getInitPosition().getFile());
+//			System.out.println("final at " + move.getFinalPosition().toString() + "|" 
+//					+ move.getFinalPosition().getRank() + move.getFinalPosition().getFile());
 			board.squares[move.getFinalPosition().getRank()][move.getFinalPosition().getFile()].releasePiece();
 			board.squares[move.getInitPosition().getRank()][move.getInitPosition().getFile()].releasePiece();
 			board.squares[move.getFinalPosition().getRank()][move.getFinalPosition().getFile()].setPiece(movedPiece);
@@ -479,45 +476,5 @@ public class Game implements Cloneable {
 			changeAgentTurn();
 		}
 	}
-/*
-	public void undoMove(Move lastMove) {
-		
-			// if last move was not pawn promo
-			if (lastMove.getFinalPosition() != lastMove.getInitPosition()) {
-				Position newInit = lastMove.getFinalPosition();
-				lastMove.setFinalPosition(lastMove.getInitPosition());
-				lastMove.setInitPosition(newInit);
-				simulateMove(lastMove);
-				if (lastMove.isCapture()) {
-					newBoard.squares[lastMove.getInitPosition().getRank()][lastMove.getInitPosition().getFile()]
-							.setPiece(lastMove.getCapturedPiece());
-				}
-
-			} else {
-				// if pawn promotion
-				Piece tmpPiece = moveLst.get(moveLst.size() - 1).getPiece();
-				if (tmpPiece.getPlayer() == PlayerType.W) {
-					newBoard.whitePieces.remove(tmpPiece);
-				} else {
-					newBoard.blackPieces.remove(tmpPiece);
-				}		
-				if (lastMove.isCapture()) {
-					board.squares[lastMove.getInitPosition().getRank()][lastMove.getInitPosition().getFile()]
-							.setPiece(lastMove.getCapturedPiece());
-				}
-
-				board.releasePiece(lastMove.getFinalPosition());
-			//	board.setPiece(lastMove.getPiece(), lastMove.getInitPosition());
-				if (lastMove.getPiece().getPlayer() == PlayerType.W) {
-					board.whitePieces.add(lastMove.getPiece());
-				} else {
-					board.blackPieces.add(lastMove.getPiece());
-				}
-			}
-
-		
-			changeTurns();
-
-		}*/
 	
 }

@@ -89,7 +89,8 @@ public class King extends Piece {
 				}
 			}
 
-			if (Math.abs(thisFile - endFile) == 2 && !hasMoved) {
+			if (Math.abs(thisFile - endFile) == 2 && (thisRank == endRank) && !hasMoved) {
+//				System.out.println("Mama we made it");
 				if (thisFile > endFile) {
 					Piece rook = game.board.retSquare(thisRank, 0).getPiece();
 					if (rook.toString().equals("R") && !rook.hasMoved) {
@@ -111,16 +112,21 @@ public class King extends Piece {
 						}
 					}
 				} else {
+//					System.out.println("We make it to here maybe?");
 					Piece rook = game.board.retSquare(thisRank, 7).getPiece();
-					if (rook.toString().equals("R") && !rook.hasMoved) {
+//					System.out.println(rook.toString());
+//					System.out.println(rook.hasMoved);
+					if (rook.toString().equals("R")) { //&& !rook.hasMoved) {
 						try {
 							if (!game.isCheck(this.getPlayer())) {
+//								System.out.println("Do we make it here?");
 								for (int i = thisFile + 1; i < 7; i++) {
 									if (!game.board.retSquare(thisRank, i).isEmpty()) {
 										return false;
 									}
 								}
 								Move tmpMove2 = new Move(this.getPosition(), new Position(thisRank, thisFile+1), this, game.board.retSquare(thisRank, thisFile+1).getPiece());
+//								System.out.println("Made it to here in King ValidMove");
 								return !game.moveMakesCheck(tmpMove2, game);
 							}
 							else {

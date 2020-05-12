@@ -17,42 +17,22 @@ public class RandomAgent extends Agent {
 		super(player);
 	}
 	
-
-	/*
-	public Move getMove(Game game, long timeDue, Map<Piece, Integer> map) {
-//		Map<Move, Integer> map = new HashMap<>();
-		
-			List<Piece> pceLst = game.board.copyPieces(this.player);
-			List<Move> mveLst = new ArrayList<Move>();
-			for(Piece pce : pceLst ) 
-			{
-				try {
-					System.out.println("piece: "+ pce.toString());
-					List<Move> lst = pce.getValidMoves(game.board.squares, game);
-					System.out.println("size: "+ lst.size());
-					mveLst.addAll(pce.getValidMoves(game.board.copySquares(), game.clone()));
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
-			}
-	}
-	*/
 	public Move getMove(Game game, long timeDue) {
 		List<Piece> pceLst = game.board.copyPieces(this.player);
 		List<Move> mveLst = new ArrayList<Move>();
 		for(Piece pce : pceLst ) 
 		{
 			try {
-				System.out.println("piece: "+ pce.toString());
-				List<Move> lst = pce.getValidMoves(game.board.squares, game);
-				System.out.println("size: "+ lst.size());
+//				System.out.println("piece: "+ pce.toString());
+//				List<Move> lst = pce.getValidMoves(game.board.squares, game);
+//				System.out.println("size: "+ lst.size());
 				mveLst.addAll(pce.getValidMoves(game.board.copySquares(), game.clone()));
 			} catch (CloneNotSupportedException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		Random rand = new Random(2);
+		Random rand = new Random();
 		for(int i = 0; i < 10; i++) 
 		{
 			rand.nextInt(mveLst.size());
@@ -66,7 +46,7 @@ public class RandomAgent extends Agent {
 		int chosen = rand.nextInt(mveLst.size());
 		
 		Move move = mveLst.get(chosen);
-		System.out.println("pceLst size " + pceLst.size());
+//		System.out.println("pceLst size " + pceLst.size());
 		System.out.println("selected: "+ move);
 		return move;
 	}

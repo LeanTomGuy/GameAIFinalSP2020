@@ -107,7 +107,14 @@ public class Rook extends Piece {
 							}
 						}
 					}
-					return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer();
+					Move tmpMove = new Move(end, this.getPosition(), this, squares[endRank][endFile].getPiece());
+					try {
+						return squares[endRank][endFile].getPiece().getPlayer() != this.getPlayer()
+								&& !game.moveMakesCheck(tmpMove, game);
+					} catch (CloneNotSupportedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else {
 					if (thisFile > endFile) {
 						for (int i = thisFile - 1; i > endFile; i--) {

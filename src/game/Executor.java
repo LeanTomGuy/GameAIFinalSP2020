@@ -15,7 +15,7 @@ public class Executor
 		Agent two = new RandomAgent(PlayerType.B);
 		Agent three = new Human(PlayerType.B);
 		//human "agent" 
-		ex.runGame(one,two);
+		ex.runGame(one,three);
 	}
 
 	void runGame(Agent agent1, Agent agent2) throws CloneNotSupportedException
@@ -23,12 +23,11 @@ public class Executor
 		Game game = new Game(agent1, agent2);
 		game.display();
 		
-		while(!game.gameOver) 
+		while(!game.isGameOver()) 
 		{
 			System.out.println("Input a valid move:\n");
 			game.update();
 			game.display();
-		    game.isGameOver();
 		}
 		
 		game.endGame();

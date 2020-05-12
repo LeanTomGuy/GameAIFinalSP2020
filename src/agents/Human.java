@@ -11,7 +11,6 @@ import player.PlayerType;
 public class Human extends Agent {
 
 	Scanner sc =  new Scanner(System.in);
-;
 
 	public Human(PlayerType player) {
 		super(player);
@@ -33,6 +32,7 @@ public class Human extends Agent {
 		}
 		String input = sc.nextLine().trim();
 		Move move = parseMove(input, game);
+		System.out.println(move.toString());
 		if (move.getPiece().toString().equals("_")) {
 			System.out.println("Not valid, try again.\n");
 			return getMove(game, timeDue);
@@ -43,7 +43,7 @@ public class Human extends Agent {
 				// System.out.println(move.getPiece().toString());
 				// System.out.println(move.getPiece().getPosition().toString());
 				// System.out.println(move.getFinalPosition().toString());
-				// System.out.println("Not valid, try again.");
+				System.out.println("Not valid, try again.");
 				try {
 					if (game.moveMakesCheck(move, game.clone()))
 						System.out.println("can't move into check. try again.");
@@ -53,9 +53,9 @@ public class Human extends Agent {
 				return getMove(game, timeDue);
 
 			} else {
-				if (move.getCapturedPiece().getPlayer() != game.whoseTurn) {
-					System.out.println("move made\n");
-					System.out.println("new:" + this.player);
+				if (move.getCapturedPiece().getPlayer() != this.player) {
+//					System.out.println("move made\n");
+					//System.out.println("new:" + this.player);
 					return move;
 				} else
 					return getMove(game, timeDue);
@@ -77,7 +77,32 @@ public class Human extends Agent {
 		Position mIPos, mFPos;
 		Piece mPce, mCap;
 
-		if (matcher.matches()) {
+		if (input.contains(castlePat)) {
+//			System.out.println("We reached here");
+			String whichSide = input.substring(7).toLowerCase();
+			switch (whichSide) {
+			case "k":
+//				System.out.println("Kingside case");
+				mPce = game.getKingSquare(this.player).getPiece();
+				mIPos = game.getKingSquare(this.player).getPosition();
+				mFPos = new Position(mIPos.getRank(), mIPos.getFile() + 2);
+				mCap = game.board.retSquare(mFPos).getPiece();
+				break;
+
+			case "q":
+				mPce = game.getKingSquare(this.player).getPiece();
+				mIPos = game.getKingSquare(this.player).getPosition();
+				mFPos = new Position(mIPos.getRank(), mIPos.getFile() - 2);
+				mCap = game.board.retSquare(mFPos).getPiece();
+				break;
+
+			default:
+				mIPos = new Position(-1, -1);
+				mFPos = new Position(-1, -1);
+				mPce = new EmptyPiece(PlayerType.NONE, mIPos);
+				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
+			}
+		} else if (matcher.matches()) {
 
 			switch (input.substring(0, 1).toUpperCase()) {
 
@@ -125,8 +150,8 @@ public class Human extends Agent {
 				mFPos = stringToPosition(input.substring(5, 7));
 				mPce = game.board.squares[mIPos.getRank()][mIPos.getFile()].getPiece();
 				mCap = game.board.squares[mFPos.getRank()][mFPos.getFile()].getPiece();
-				System.out.println(mPce.toString());
-				System.out.println(this.player);
+//				System.out.println(mPce.toString());
+//				System.out.println(this.player);
 				if (!(mPce.toString().equals("P") && mPce.getPlayer() == this.player)) {
 					mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 				}
@@ -147,36 +172,16 @@ public class Human extends Agent {
 				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
 
 			}
-		} else if (input.contains(castlePat)) {
-			String whichSide = input.substring(6).toLowerCase();
-			switch (whichSide) {
-			case "k":
-				mPce = game.getKingSquare(this.player).getPiece();
-				mIPos = game.getKingSquare(this.player).getPosition();
-				mFPos = new Position(mIPos.getRank(), mIPos.getFile() + 2);
-				mCap = game.board.retSquare(mFPos).getPiece();
-
-			case "q":
-				mPce = game.getKingSquare(this.player).getPiece();
-				mIPos = game.getKingSquare(this.player).getPosition();
-				mFPos = new Position(mIPos.getRank(), mIPos.getFile() - 2);
-				mCap = game.board.retSquare(mFPos).getPiece();
-
-			default:
-				mIPos = new Position(-1, -1);
-				mFPos = new Position(-1, -1);
-				mPce = new EmptyPiece(PlayerType.NONE, mIPos);
-				mCap = new EmptyPiece(PlayerType.NONE, mIPos);
-			}
-		}
-
-		else {
+		} else {
 			mIPos = new Position(-1, -1);
 			mFPos = new Position(-1, -1);
 			mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 			mCap = new EmptyPiece(PlayerType.NONE, mIPos);
 		}
-		return new Move(mIPos, mFPos, mPce, mCap);
+		//System.out.println(mIPos.toString() + " " + mFPos.toString() + " " + mPce.toString());
+		Move mv = new Move(mIPos, mFPos, mPce, mCap);
+//		System.out.println(mv.isCastle());
+		return mv;
 	}
 
 }
