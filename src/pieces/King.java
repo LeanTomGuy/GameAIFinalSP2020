@@ -93,7 +93,8 @@ public class King extends Piece {
 //				System.out.println("Mama we made it");
 				if (thisFile > endFile) {
 					Piece rook = game.board.retSquare(thisRank, 0).getPiece();
-					if (rook.toString().equals("R") && !rook.hasMoved) {
+					System.out.println("boolean check is " + game.cantCastle);
+					if (rook.toString().equals("R") && !game.cantCastle) {
 						try {
 							if (!game.isCheck(this.getPlayer())) {
 								for (int i = thisFile - 1; i >= 1; i--) {

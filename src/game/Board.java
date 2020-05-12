@@ -21,7 +21,7 @@ public class Board {
 	public Board copyBoard() 
 	{
 		Board out = new Board();
-		out.squares = this.copySquares();
+		out.squares = copySquares();
 		out.whitePieces = copyPieces(PlayerType.W);
 		out.blackPieces = copyPieces(PlayerType.B);
 		
@@ -102,6 +102,7 @@ public class Board {
 	
 	public void setPiece(Piece newPiece, Position newPos) 
 	{
+		//System.out.println("Setting piece " + newPiece.toString() + " at position " + newPos.toString());
 		retSquare(newPos).setPiece(newPiece);
 	}
 	

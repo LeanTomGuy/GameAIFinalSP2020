@@ -32,7 +32,7 @@ public abstract class Piece {
 
 	private Position pos;
 
-	public Piece copyPiece(Piece pce) {
+	public static Piece copyPiece(Piece pce) {
 		switch (pce.toString()) {
 		case "K":
 			return new King(pce.getPlayer(), pce.getPosition().copy());

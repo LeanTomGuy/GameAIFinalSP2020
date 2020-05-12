@@ -32,24 +32,23 @@ public class Human extends Agent {
 		}
 		String input = sc.nextLine().trim();
 		Move move = parseMove(input, game);
-		System.out.println(move.toString());
+	//	System.out.println(move.toString());
 		if (move.getPiece().toString().equals("_")) {
 			System.out.println("Not valid, try again.\n");
 			return getMove(game, timeDue);
 		}
 		try {
+			System.out.println("condition 1: " + !(move.getPiece().isValidMove(move.getFinalPosition(), game.board.copySquares(), game.clone())));
+			System.out.println("move details " + move.toString());
+			System.out.println("condition 2: " +  !(move.getInitPosition().equals(move.getPiece().getPosition())));
+			System.out.println("piece position currently at " + move.getPiece().getPosition().toString());
+		
 			if (!(move.getPiece().isValidMove(move.getFinalPosition(), game.board.copySquares(), game.clone()))
 					|| !(move.getInitPosition().equals(move.getPiece().getPosition()))) {
 				// System.out.println(move.getPiece().toString());
 				// System.out.println(move.getPiece().getPosition().toString());
 				// System.out.println(move.getFinalPosition().toString());
 				System.out.println("Not valid, try again.");
-				try {
-					if (game.moveMakesCheck(move, game.clone()))
-						System.out.println("can't move into check. try again.");
-				} catch (CloneNotSupportedException e) {
-					e.printStackTrace();
-				}
 				return getMove(game, timeDue);
 
 			} else {
@@ -108,6 +107,7 @@ public class Human extends Agent {
 
 			case "K":
 				if (input.substring(0, 2).equals("Kn")) {
+					System.out.println("knight stuff");
 					mIPos = stringToPosition(input.substring(3, 5));
 					mFPos = stringToPosition(input.substring(6, 8));
 					mPce = game.board.squares[mIPos.getRank()][mIPos.getFile()].getPiece();
@@ -118,6 +118,7 @@ public class Human extends Agent {
 						mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 					}
 				} else {
+					System.out.println("king stuff");
 					mIPos = stringToPosition(input.substring(2, 4));
 					mFPos = stringToPosition(input.substring(5, 7));
 					mPce = game.board.squares[mIPos.getRank()][mIPos.getFile()].getPiece();

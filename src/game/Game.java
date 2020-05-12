@@ -21,7 +21,7 @@ public class Game implements Cloneable {
 	public Agent agentTurn;
 	public Board board;
 	public List<Move> moveLst;
-	public Boolean wInCheck = false, bInCheck = false, gameOver = false;
+	public Boolean wInCheck = false, bInCheck = false, gameOver = false, cantCastle = false;
 	Position wKingPos = new Position(0, 4);
 	Position bKingPos = new Position(7, 4);
 	public int turnLimit = 200;
@@ -61,15 +61,6 @@ public class Game implements Cloneable {
 	}
 	
 	void display() {
-		/*
-		for (int i = 7; i >= 0; i--) {
-			for (int j = 0; j < 8; j++) {
-				Squares tmp = board.retSquare(i, j);
-				System.out.print(tmp.pie.toDisplay());
-			}
-			System.out.println();
-		}
-		\*/
 		for (int i = 7; i >= 0; i--) {
 			for (int j = 0; j < 8; j++) {
 				Squares tmp = board.retSquare(i, j);
@@ -144,6 +135,7 @@ public class Game implements Cloneable {
 
 						mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 					}
+					break;
 				} else {
 					mIPos = stringToPosition(input.substring(2, 4));
 					mFPos = stringToPosition(input.substring(5, 7));
@@ -152,8 +144,9 @@ public class Game implements Cloneable {
 					if (!(mPce.toString().equals("K") && mPce.getPlayer() == whoseTurn)) {
 						mPce = new EmptyPiece(PlayerType.NONE, mIPos);
 					}
+					break;
 				}
-				break;
+				
 			case "B":
 				mIPos = stringToPosition(input.substring(2, 4));
 				mFPos = stringToPosition(input.substring(5, 7));
@@ -249,7 +242,7 @@ public class Game implements Cloneable {
 			else
 				update();
 		}
-			System.out.println(turn);
+			System.out.println("Turn " + turn);
 	}
 
 	// castling
@@ -374,7 +367,7 @@ public class Game implements Cloneable {
 	}
 
 	public Board simulateMove(Move move) {
-		Piece movedPiece = move.getPiece();
+		Piece movedPiece = Piece.copyPiece(move.getPiece());
 		Board newBoard = board.copyBoard();
 		if (move.isCastle()) {
 			movedPiece.setPosition(move.getFinalPosition());
@@ -382,8 +375,8 @@ public class Game implements Cloneable {
 			newBoard.retSquare(move.getFinalPosition()).releasePiece();
 			newBoard.retSquare(move.getFinalPosition()).setPiece(movedPiece);
 
-			if (move.getFinalPosition().getRank() > move.getInitPosition().getRank()) {
-				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 7).getPiece();
+			if (move.getFinalPosition().getFile() > move.getInitPosition().getFile()) {
+				Piece movedRook = Piece.copyPiece(board.retSquare(move.getInitPosition().getRank(), 7).getPiece());
 				newBoard.retSquare(movedRook.getPosition()).releasePiece();
 				movedRook.setPosition(new Position(movedRook.getPosition().getRank(), 5));
 				newBoard.retSquare(movedRook.getPosition()).releasePiece();
@@ -392,7 +385,7 @@ public class Game implements Cloneable {
 				changeAgentTurn();
 				
 			} else {
-				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 0).getPiece();
+				Piece movedRook = Piece.copyPiece(board.retSquare(move.getInitPosition().getRank(), 0).getPiece());
 				newBoard.retSquare(movedRook.getPosition()).releasePiece();
 				movedRook.setPosition(new Position(movedRook.getPosition().getRank(), 3));
 				newBoard.retSquare(movedRook.getPosition()).releasePiece();
@@ -425,16 +418,16 @@ public class Game implements Cloneable {
 	}
 
 	public void advanceGame(Move move) {
-		System.out.println(move.toString());
+	//	System.out.println(move.toString());
 		Piece movedPiece = move.getPiece();
 		if (move.isCastle()) {
-//			System.out.println("is castle");
+			System.out.println("isCastle successful");
 			movedPiece.setPosition(move.getFinalPosition());
 			board.retSquare(move.getInitPosition()).releasePiece();
 			board.retSquare(move.getFinalPosition()).releasePiece();
 			board.retSquare(move.getFinalPosition()).setPiece(movedPiece);
 
-			if (move.getFinalPosition().getRank() > move.getInitPosition().getRank()) {
+			if (move.getFinalPosition().getFile() > move.getInitPosition().getFile()) {
 				Piece movedRook = board.retSquare(move.getInitPosition().getRank(), 7).getPiece();
 				board.retSquare(movedRook.getPosition()).releasePiece();
 				movedRook.setPosition(new Position(movedRook.getPosition().getRank(), 5));
@@ -454,8 +447,10 @@ public class Game implements Cloneable {
 		} else {
 //			System.out.println("not castle");
 			if (movedPiece.toString().equals("R") || movedPiece.toString().equals("K"))
-				movedPiece.hasMoved = true;
-
+			{	//movedPiece.hasMoved = true;
+				cantCastle = true;
+				System.out.println("This shit is happening.");
+			}
 			if (move.isCapture()) {
 //				System.out.println("isCapture");
 				if (move.getCapturedPiece().getPlayer() == PlayerType.W)
