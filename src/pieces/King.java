@@ -11,6 +11,7 @@ public class King extends Piece {
 	public Boolean hasMoved = false;
 	public Boolean inCheck = false;
 
+	public static int value = 0;
 	public King(PlayerType play, Position pos) {
 
 		super(play, pos);
@@ -93,7 +94,7 @@ public class King extends Piece {
 //				System.out.println("Mama we made it");
 				if (thisFile > endFile) {
 					Piece rook = game.board.retSquare(thisRank, 0).getPiece();
-					System.out.println("boolean check is " + game.cantCastle);
+					//System.out.println("boolean check is " + game.cantCastle);
 					if (rook.toString().equals("R") && !game.cantCastle) {
 						try {
 							if (!game.isCheck(this.getPlayer())) {

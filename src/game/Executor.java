@@ -12,10 +12,8 @@ public class Executor
 		//run 
 		Executor ex = new Executor();
 		Agent one = new Human (PlayerType.W);
-		Agent two = new RandomAgent(PlayerType.B);
-		Agent three = new Human(PlayerType.B);
-		//human "agent" 
-		ex.runGame(one,three);
+		Agent two = new MinimaxAgent(PlayerType.B);
+		ex.runGame(one,two);
 	}
 
 	void runGame(Agent agent1, Agent agent2) throws CloneNotSupportedException

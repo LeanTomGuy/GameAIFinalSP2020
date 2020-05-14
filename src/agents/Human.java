@@ -38,10 +38,10 @@ public class Human extends Agent {
 			return getMove(game, timeDue);
 		}
 		try {
-			System.out.println("condition 1: " + !(move.getPiece().isValidMove(move.getFinalPosition(), game.board.copySquares(), game.clone())));
-			System.out.println("move details " + move.toString());
-			System.out.println("condition 2: " +  !(move.getInitPosition().equals(move.getPiece().getPosition())));
-			System.out.println("piece position currently at " + move.getPiece().getPosition().toString());
+//			System.out.println("condition 1: " + !(move.getPiece().isValidMove(move.getFinalPosition(), game.board.copySquares(), game.clone())));
+//			System.out.println("move details " + move.toString());
+//			System.out.println("condition 2: " +  !(move.getInitPosition().equals(move.getPiece().getPosition())));
+//			System.out.println("piece position currently at " + move.getPiece().getPosition().toString());
 		
 			if (!(move.getPiece().isValidMove(move.getFinalPosition(), game.board.copySquares(), game.clone()))
 					|| !(move.getInitPosition().equals(move.getPiece().getPosition()))) {

@@ -22,6 +22,8 @@ public abstract class Piece {
 	 * EmptyPiece)
 	 */
 
+	private static int value;
+	
 	public abstract List<Move> getValidMoves(Squares[][] squares, Game game);
 
 	public abstract Boolean isValidMove(Position end, Squares[][] squares, Game game);
@@ -64,6 +66,10 @@ public abstract class Piece {
 		return this.pos;
 	}
 
+	public int getScore() 
+	{
+		return value;
+	}
 	public void setPosition(Position newPos) {
 		//System.out.println("setPosition() called at " + newPos.toString());
 		this.pos = newPos;
